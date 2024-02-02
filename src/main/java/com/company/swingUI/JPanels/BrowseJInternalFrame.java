@@ -4,6 +4,11 @@
  */
 package com.company.swingUI.JPanels;
 
+import com.company.bean.Product;
+import com.company.dataAccess.implementation.ProductDAO;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author islam
@@ -29,9 +34,9 @@ public class BrowseJInternalFrame extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        searchJTextPane = new javax.swing.JTextPane();
         jLabel1 = new javax.swing.JLabel();
         searchJButton = new javax.swing.JButton();
         showAllJButton = new javax.swing.JButton();
@@ -47,19 +52,19 @@ public class BrowseJInternalFrame extends javax.swing.JInternalFrame {
             .addGap(0, 427, Short.MAX_VALUE)
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+
             },
             new String [] {
-                "Part_Name", "Part_Number", "Part_Description", "Part_Price"
+                "Part_Name", "Part_Description", "Part_Number", "Part_Price", "Part_Amount"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -70,9 +75,9 @@ public class BrowseJInternalFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(jTable);
 
-        jScrollPane1.setViewportView(jTextPane1);
+        jScrollPane1.setViewportView(searchJTextPane);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Quick Search:");
@@ -157,11 +162,50 @@ public class BrowseJInternalFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchJButtonActionPerformed
-        // TODO add your handling code here:
+        String searchInput = searchJTextPane.getText();
+        ProductDAO dao = new ProductDAO();
+        List<Product> products = dao.getSearch(searchInput);
+        
+        DefaultTableModel model = new DefaultTableModel(
+            new String [] {
+                "Part_Name", "Part_Description", "Part_Number", "Part_Price", "Part_Amount"
+            }, 0
+        );
+        
+        for (Product p : products) {
+            model.addRow(new Object[]
+            {
+                p.getName()
+                ,p.getDescription()
+                ,p.getProductNumber()
+                ,p.getPrice()
+                ,p.getAmount()
+            });
+        }
+        jTable.setModel(model);
     }//GEN-LAST:event_searchJButtonActionPerformed
 
     private void showAllJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAllJButtonActionPerformed
-        // TODO add your handling code here:
+        ProductDAO dao = new ProductDAO();
+        List<Product> products = dao.getAllProduct();
+        
+        DefaultTableModel model = new DefaultTableModel(
+            new String [] {
+                "Part_Name", "Part_Description", "Part_Number", "Part_Price", "Part_Amount"
+            }, 0
+        );
+        
+        for (Product p : products) {
+            model.addRow(new Object[]
+            {
+                p.getName()
+                ,p.getDescription()
+                ,p.getProductNumber()
+                ,p.getPrice()
+                ,p.getAmount()
+            });
+        }
+        jTable.setModel(model);
     }//GEN-LAST:event_showAllJButtonActionPerformed
 
 
@@ -171,9 +215,9 @@ public class BrowseJInternalFrame extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTable jTable;
     private javax.swing.JButton searchJButton;
+    private javax.swing.JTextPane searchJTextPane;
     private javax.swing.JButton showAllJButton;
     // End of variables declaration//GEN-END:variables
 }

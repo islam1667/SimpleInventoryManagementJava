@@ -135,5 +135,31 @@ public class ProductDAO implements ProductDAOInter {
         }
         return affectedRows;
     }
+    
+    public List<Product> getSearch(String s){
+        List<Product> products = new ArrayList<>();
+        try(Connection c = getConnection()){
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM `producttable` WHERE"
+                    + " productName LIKE ? OR"
+                    + " productDescription LIKE ? OR"
+                    + " CAST(ProductPrice AS CHAR) LIKE ? OR"
+                    + " productNumber LIKE ? OR"
+                    + " CAST(productAmount AS CHAR) LIKE ?");
+            for(int i=1;i<6;i++) ps.setString(i, "%"+s+"%");
+            
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                products.add(new Product(rs.getString("productName"),
+                rs.getString("productDescription"),
+                rs.getDouble("productPrice"),
+                rs.getInt("id"),
+                rs.getString("productNumber"),
+                rs.getInt("productAmount")));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return products;
+    }
 
 }
