@@ -16,8 +16,8 @@ import java.util.List;
 public class ProductDAO implements ProductDAOInter {
 
     @Override
-    public boolean insertProduct(Product p) {
-        boolean successful = false;
+    public int insertProduct(Product p) {
+        int affectedRows = 0;
         try (Connection c = getConnection();) {
             PreparedStatement ps = c.prepareStatement("INSERT INTO `producttable` "
                     + "(productName, productDescription, productNumber, productAmount, productPrice) "
@@ -27,30 +27,30 @@ public class ProductDAO implements ProductDAOInter {
             ps.setString(3, p.getProductNumber());
             ps.setInt(4, p.getAmount());
             ps.setDouble(5, p.getPrice());
-            successful = ps.execute();
+            affectedRows = ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return successful;
+        return affectedRows;
     }
 
     
     @Override
-    public boolean sellProduct(int id, int amount) {
-        boolean successful = false;
+    public int sellProduct(int id, int amount) {
+        int affectedRows = 0;
         try(Connection c = getConnection()){
             PreparedStatement ps = c.prepareStatement("UPDATE `producttable` productAmount=productAmount-? WHERE id=?");
             ps.setInt(1, amount);
             ps.setInt(2, id);
-            successful = ps.execute();
+            affectedRows = ps.executeUpdate();
         }catch(SQLException ex){
             ex.printStackTrace();
         }
-        return successful;
+        return affectedRows;
     }
 
     @Override
-    public boolean updateProduct(int databaseId, Product p) {
+    public int updateProduct(int databaseId, Product p) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -74,6 +74,33 @@ public class ProductDAO implements ProductDAOInter {
         }
         return p;
     }
+    
+    public Product ifExist(Product p) {
+        Product pf = null;
+        try(Connection c = getConnection()){
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM `producttable` WHERE"
+                    + " productName=? AND"
+                    + " productDescription=? AND"
+                    + " productPrice=? AND"
+                    + " productNumber=?");
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setString(4, p.getProductNumber());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                pf = new Product(rs.getString("productName"),
+                rs.getString("productDescription"),
+                rs.getDouble("productPrice"),
+                rs.getInt("id"),
+                rs.getString("productNumber"),
+                rs.getInt("productAmount"));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return pf;
+    }
 
     @Override
     public List<Product> getAllProduct() {
@@ -96,17 +123,17 @@ public class ProductDAO implements ProductDAOInter {
     }
 
     @Override
-    public boolean addProduct(int id, int amount) {
-        boolean successful = false;
+    public int addProduct(int id, int amount) {
+        int affectedRows = 0;
         try(Connection c = getConnection()){
-            PreparedStatement ps = c.prepareStatement("UPDATE `producttable` productAmount=productAmount+? WHERE id=?");
+            PreparedStatement ps = c.prepareStatement("UPDATE `producttable` SET productAmount=productAmount+? WHERE id=?");
             ps.setInt(1, amount);
             ps.setInt(2, id);
-            successful = ps.execute();
+            affectedRows = ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return successful;
+        return affectedRows;
     }
 
 }

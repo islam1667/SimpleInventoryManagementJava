@@ -8,13 +8,13 @@ import java.util.List;
  * @author islam
  */
 public interface ProductDAOInter extends MainDAOInter{
-    public boolean insertProduct(Product p);
+    public int insertProduct(Product p);
     
-    public boolean addProduct(int id, int amount);
+    public int addProduct(int id, int amount);
     
-    public boolean sellProduct(int id, int amount);
+    public int sellProduct(int id, int amount);
     
-    public boolean updateProduct(int id, Product p);
+    public int updateProduct(int id, Product p);
     
     public Product getProduct(int databaseId);
     
