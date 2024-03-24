@@ -1,5 +1,7 @@
 package com.company.swingUI;
 
+import javax.swing.UIManager;
+
 /**
  *
  * @author islam
@@ -10,13 +12,23 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
      * Creates new form InventoryManagementJFrame
      */
     public InventoryManagementJFrame() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initComponents();
-        this.internalFrameJPanel.add(Config.sellFrame);
-        this.internalFrameJPanel.add(Config.addFrame);
-        this.internalFrameJPanel.add(Config.browseFrame);
+        mainJPanel.setLayout(Config.layout);
+        this.mainJPanel.add(Config.sellFrame, "sellFrame");
+        this.mainJPanel.add(Config.addFrame, "addFrame");
+        this.mainJPanel.add(Config.browseFrame, "browseFrame");
+        this.mainJPanel.add(Config.importFrame, "importFrame");
         this.revalidate();
         this.repaint();
-       
+    }
+    
+    public javax.swing.JPanel getMainJPanel(){
+        return this.mainJPanel;
     }
 
     /**
@@ -57,7 +69,7 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
         jSpinner1 = new javax.swing.JSpinner();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         topButtonBarJPanel1 = new com.company.swingUI.JPanels.TopButtonBarJPanel();
-        internalFrameJPanel = new javax.swing.JPanel();
+        mainJPanel = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -216,15 +228,17 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout internalFrameJPanelLayout = new javax.swing.GroupLayout(internalFrameJPanel);
-        internalFrameJPanel.setLayout(internalFrameJPanelLayout);
-        internalFrameJPanelLayout.setHorizontalGroup(
-            internalFrameJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        mainJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        javax.swing.GroupLayout mainJPanelLayout = new javax.swing.GroupLayout(mainJPanel);
+        mainJPanel.setLayout(mainJPanelLayout);
+        mainJPanelLayout.setHorizontalGroup(
+            mainJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 807, Short.MAX_VALUE)
         );
-        internalFrameJPanelLayout.setVerticalGroup(
-            internalFrameJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 288, Short.MAX_VALUE)
+        mainJPanelLayout.setVerticalGroup(
+            mainJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 432, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -232,19 +246,17 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(topButtonBarJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(internalFrameJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(topButtonBarJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(topButtonBarJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(internalFrameJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mainJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -287,7 +299,6 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel internalFrameJPanel;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
@@ -316,6 +327,7 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JPanel mainJPanel;
     private com.company.swingUI.JPanels.TopButtonBarJPanel topButtonBarJPanel1;
     // End of variables declaration//GEN-END:variables
 }

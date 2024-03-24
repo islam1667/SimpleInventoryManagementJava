@@ -1,6 +1,7 @@
 package com.company.swingUI.JPanels;
 
 import com.company.swingUI.Config;
+import com.company.swingUI.InventoryManagementJFrame;
 
 /**
  *
@@ -27,8 +28,9 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         sellJButton = new javax.swing.JButton();
+        importJButton = new javax.swing.JButton();
+        addJButton = new javax.swing.JButton();
         browseJButton = new javax.swing.JButton();
-        addJButton1 = new javax.swing.JButton();
 
         sellJButton.setText("Sell");
         sellJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -37,17 +39,24 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
             }
         });
 
+        importJButton.setText("Import");
+        importJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importJButtonActionPerformed(evt);
+            }
+        });
+
+        addJButton.setText("Add");
+        addJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addJButtonActionPerformed(evt);
+            }
+        });
+
         browseJButton.setText("Browse");
         browseJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 browseJButtonActionPerformed(evt);
-            }
-        });
-
-        addJButton1.setText("Add");
-        addJButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addJButton1ActionPerformed(evt);
             }
         });
 
@@ -59,19 +68,22 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(sellJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addJButton1)
+                .addComponent(addJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseJButton)
-                .addContainerGap(421, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(importJButton)
+                .addContainerGap(343, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(browseJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(importJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addComponent(sellJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addComponent(addJButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                    .addComponent(addJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(browseJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -89,47 +101,31 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJButtonActionPerformed
+        System.out.println("Add Button Clicked");
+        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "addFrame");
+    }//GEN-LAST:event_addJButtonActionPerformed
+
+    private void importJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importJButtonActionPerformed
+        System.out.println("Import Button Clicked");
+        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "importFrame");
+    }//GEN-LAST:event_importJButtonActionPerformed
+
     private void sellJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sellJButtonActionPerformed
         System.out.println("Sell Button Clicked");
-
-        if (!Config.sellFrame.isVisible()) {
-            Config.sellFrame.setVisible(true);
-            Config.addFrame.setVisible(false);
-            Config.browseFrame.setVisible(false);
-        } else {
-            Config.sellFrame.setVisible(false);
-            
-        }
+        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "sellFrame");
     }//GEN-LAST:event_sellJButtonActionPerformed
 
     private void browseJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseJButtonActionPerformed
-        if (!Config.browseFrame.isVisible()) {
-            Config.browseFrame.setVisible(true);
-            Config.addFrame.setVisible(false);
-            Config.sellFrame.setVisible(false);
-        } else {
-            Config.browseFrame.setVisible(false);
-            
-        }
+        System.out.println("Browse Button Clicked");
+        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "browseFrame");
     }//GEN-LAST:event_browseJButtonActionPerformed
-
-    private void addJButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJButton1ActionPerformed
-        System.out.println("Add Button Clicked");
-
-        if (!Config.addFrame.isVisible()) {
-            Config.addFrame.setVisible(true);
-            Config.sellFrame.setVisible(false);
-            Config.browseFrame.setVisible(false);
-        } else {
-            Config.addFrame.setVisible(false);
-            
-        }
-    }//GEN-LAST:event_addJButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addJButton1;
+    private javax.swing.JButton addJButton;
     private javax.swing.JButton browseJButton;
+    private javax.swing.JButton importJButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton sellJButton;
     // End of variables declaration//GEN-END:variables

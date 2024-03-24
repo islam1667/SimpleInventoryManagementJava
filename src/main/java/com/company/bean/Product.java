@@ -12,15 +12,15 @@ public class Product implements ProductInter {
     private Double price;
     private Integer id;
     private String productNumber;
-    private Integer amount;
+    private Integer quantity;
 
-    public Product(String name, String description, Double price, Integer id, String productNumber, Integer amount) {
+    public Product(String name, String description, Double price, Integer id, String productNumber, Integer quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.id = id;
         this.productNumber = productNumber;
-        this.amount = amount;
+        this.quantity = quantity;
     }
     
     
@@ -33,12 +33,12 @@ public class Product implements ProductInter {
         this.productNumber = productNumber;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     @Override
@@ -83,4 +83,24 @@ public class Product implements ProductInter {
     public void setProductId(String productId) {
         this.productNumber = productId;
     }
+
+    public Double getTotalPrice() {
+        return (this.quantity * this.price);
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
+//        return "Product{" + "name=" + name + ", description=" + description + ", price=" + price + ", productNumber=" + productNumber + '}';
+    }
+    
+    public Object[] toTableRow(int rowNum) {
+//        DecimalFormat df = new DecimalFormat("#,##0.##");
+        return new Object[]{this, this.name , this.productNumber , this.description , this.quantity, this.price , this.getTotalPrice()};
+    }
+    
+//    public Product rowDatatoObject(){
+//        return 
+//    }
+    
 }

@@ -38,10 +38,12 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="sellJButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="addJButton1" min="-2" max="-2" attributes="0"/>
+                  <Component id="addJButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="browseJButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="421" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="importJButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="343" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -50,9 +52,10 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="browseJButton" alignment="3" pref="39" max="32767" attributes="0"/>
+                      <Component id="importJButton" alignment="3" pref="39" max="32767" attributes="0"/>
                       <Component id="sellJButton" alignment="3" pref="39" max="32767" attributes="0"/>
-                      <Component id="addJButton1" alignment="3" pref="39" max="32767" attributes="0"/>
+                      <Component id="addJButton" alignment="3" pref="39" max="32767" attributes="0"/>
+                      <Component id="browseJButton" alignment="3" pref="39" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -68,20 +71,28 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sellJButtonActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="importJButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Import"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importJButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="addJButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Add"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addJButtonActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JButton" name="browseJButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Browse"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseJButtonActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="addJButton1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Add"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addJButton1ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

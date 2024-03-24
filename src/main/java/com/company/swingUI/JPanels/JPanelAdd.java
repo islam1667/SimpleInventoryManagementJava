@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 package com.company.swingUI.JPanels;
 
 import com.company.bean.Product;
@@ -7,12 +11,12 @@ import com.company.dataAccess.implementation.ProductDAO;
  *
  * @author islam
  */
-public class AddJInternalFrame extends javax.swing.JInternalFrame {
+public class JPanelAdd extends javax.swing.JPanel {
 
     /**
-     * Creates new form AddJInternalFrame
+     * Creates new form JPanelAdd
      */
-    public AddJInternalFrame() {
+    public JPanelAdd() {
         initComponents();
     }
 
@@ -41,6 +45,8 @@ public class AddJInternalFrame extends javax.swing.JInternalFrame {
         infoJLabel = new javax.swing.JLabel();
         partPriceJSpinner = new javax.swing.JSpinner();
         partAmountJSpinner = new javax.swing.JSpinner();
+
+        jPanel1.setBorder(new javax.swing.border.MatteBorder(null));
 
         jScrollPane1.setViewportView(partNameJTextPane);
 
@@ -93,7 +99,7 @@ public class AddJInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)
                             .addComponent(jScrollPane3)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,8 +149,8 @@ public class AddJInternalFrame extends javax.swing.JInternalFrame {
                 .addGap(30, 30, 30))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -159,8 +165,6 @@ public class AddJInternalFrame extends javax.swing.JInternalFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addPartJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartJButtonActionPerformed
@@ -176,28 +180,28 @@ public class AddJInternalFrame extends javax.swing.JInternalFrame {
             infoJLabel.setText("Part Number is not valid.");
             return;
         }
-        
+
         ProductDAO dao = new ProductDAO();
         Product p = new Product(partNameJTextPane.getText()
-        ,partDescriptionJTextPane.getText()
-        ,(Double)partPriceJSpinner.getValue()
-        ,-1
-        ,partNumberJTextPane.getText()
-        ,(Integer)partAmountJSpinner.getValue());
-        
+            ,partDescriptionJTextPane.getText()
+            ,(Double)partPriceJSpinner.getValue()
+            ,-1
+            ,partNumberJTextPane.getText()
+            ,(Integer)partAmountJSpinner.getValue());
+
         Product foundProduct = dao.ifExist(p);
         if(foundProduct!=null){
             infoJLabel.setText("Product already exist in DB.");
             return;
         }
-        
+
         int affectedRows;
         if(foundProduct != null){
-            affectedRows = dao.addProduct(foundProduct.getId(), p.getAmount());
+            affectedRows = dao.addProduct(foundProduct.getId(), p.getQuantity());
         }else{
             affectedRows = dao.insertProduct(p);
         }
-        
+
         if(affectedRows!=0) infoJLabel.setText("Product added DB successfully.");
         else infoJLabel.setText("Something went wrong adding product to DB.");
     }//GEN-LAST:event_addPartJButtonActionPerformed
