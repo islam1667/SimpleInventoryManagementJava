@@ -1,12 +1,16 @@
 package com.company.swingUI.JPanels;
 
+import com.company.bean.Currency;
 import com.company.bean.Product;
 import com.company.bean.SaleRecord;
 import com.company.dataAccess.implementation.SaleDAO;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import com.company.swingUI.Config;
 
 /**
  *
@@ -19,45 +23,78 @@ public class JPanelSell extends javax.swing.JPanel {
      */
     public JPanelSell() {
         initComponents();
-        testData();
         configureTable();
     }
 
     private void configureTable() {
-        jTableSell.setRowHeight(25);
-        jTableSell.getColumnModel().getColumn(1).setCellEditor(new ProductCellEditor(new EventCellInputChange() {
+        DefaultTableModel model = new DefaultTableModel(
+                new String[]{
+                    "Data", //0
+                    "№", //1
+                    "Name", //2
+                    "Number", //3
+                    "Description", //4
+                    "Quantity", //5
+                    "Measure", //6
+                    "Buy Price", //7
+                    "Sell Price", //8
+                    "Discount", //9
+                    "Currency", //10
+                    "Company", //11
+                    "Total Price Value" //12
+                }, 1){
             @Override
-            public void inputChanged() {
+            public boolean isCellEditable(int row, int column) {
+                if(column == Config.NAME_COL || column == Config.QUANTITY_COL || column == Config.DISCOUNT_COL) return true;
+                return false;
+            }  
+                };
+
+        
+        jTableSell.setModel(model);
+        jTableSell.getColumnModel().getColumn(Config.DATA_COL).setMaxWidth(0);
+        jTableSell.getColumnModel().getColumn(Config.N_COL).setMaxWidth(50);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setBackground(Color.lightGray);
+        jTableSell.getColumnModel().getColumn(2).setCellRenderer(renderer);
+        
+        
+        jTableSell.setRowHeight(25);
+
+        //filter combo box cell editor
+        jTableSell.getColumnModel().getColumn(Config.NAME_COL).setCellEditor(new ProductCellEditor(new EventCellInputChange() {
+            @Override
+            public void inputChanged(Product item, int row) {
+                jTableSell.getModel().setValueAt((item.getQuantity() == 0) ? 0.0 : item.getSellPrice(), row, Config.TOTAL_COL);
                 DefaultTableModel model = (DefaultTableModel) jTableSell.getModel();
-                if (model.getValueAt(model.getRowCount() - 1, 0) != null) {
+                if (model.getValueAt(model.getRowCount() - 1, Config.DATA_COL) != null) {
                     model.addRow(new Object[model.getColumnCount()]);
                 }
                 sumAndShow();
                 System.out.println("Input Change Fired");
             }
-        }));
-    }
+        }, false));
 
-    private void testData() {
-        jTableSell.getColumnModel().getColumn(4).setCellEditor(new QtyCellEditor(new EventCellInputChange() {
+        jTableSell.getColumnModel().getColumn(Config.DISCOUNT_COL).setCellEditor(new DiscountCellEditor(new EventCellInputChange(){
             @Override
-            public void inputChanged() {
+            public void inputChanged(Product p, int row) {
+                sumAndShow();
+            }            
+        }));
+        
+        //Quantity cell editor
+        jTableSell.getColumnModel().getColumn(Config.QUANTITY_COL).setCellEditor(new QtyCellEditor(new EventCellInputChange() {
+            @Override
+            public void inputChanged(Product p, int row) {
                 sumAndShow();
             }
-        }));
-
-//        DefaultTableModel model = (DefaultTableModel) jTableSell.getModel();
-//        model.addRow(new Product("Coca", "cda", 2.0, -1, "A1", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cofasca", "csa", 3.0, -1, "A2", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cocfaa", "cvf", 4.0, -1, "A3", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cofaca", "ccd", 5.0, -1, "A4", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cocfasa", "cas", 6.0, -1, "A5", 2).toTableRow(jTableSell.getRowCount() + 1));
+        }, false));
     }
 
     public double sumAndShow() {
         double sum = 0;
         for (int row = 0; row < jTableSell.getRowCount() - 1; row++) {
-            sum += (double) jTableSell.getValueAt(row, 6);
+            sum += (double) jTableSell.getValueAt(row, Config.TOTAL_COL);
         }
         totalJLabel.setText("Total: " + String.format("%.2f", sum));
         return sum;
@@ -110,12 +147,22 @@ public class JPanelSell extends javax.swing.JPanel {
             }
         });
         jTableSell.setToolTipText("");
+        jTableSell.setFocusTraversalPolicyProvider(true);
+        jTableSell.setNextFocusableComponent(jButtonSell);
         jTableSell.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTableSell);
         if (jTableSell.getColumnModel().getColumnCount() > 0) {
-            jTableSell.getColumnModel().getColumn(0).setResizable(false);
             jTableSell.getColumnModel().getColumn(0).setPreferredWidth(0);
+            jTableSell.getColumnModel().getColumn(0).setHeaderValue("Data");
             jTableSell.getColumnModel().getColumn(1).setPreferredWidth(160);
+            jTableSell.getColumnModel().getColumn(1).setHeaderValue("Part_Name");
+            jTableSell.getColumnModel().getColumn(2).setHeaderValue("Part_Number");
+            jTableSell.getColumnModel().getColumn(3).setHeaderValue("Part_Description");
+            jTableSell.getColumnModel().getColumn(4).setHeaderValue("Part_Quantity");
+            jTableSell.getColumnModel().getColumn(5).setResizable(false);
+            jTableSell.getColumnModel().getColumn(5).setHeaderValue("Part_Price");
+            jTableSell.getColumnModel().getColumn(6).setResizable(false);
+            jTableSell.getColumnModel().getColumn(6).setHeaderValue("Total_Price");
         }
 
         simpleJLabel.setText("Enter Product Code");
@@ -154,9 +201,9 @@ public class JPanelSell extends javax.swing.JPanel {
                 .addComponent(simpleJLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSell, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(totalJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -175,26 +222,30 @@ public class JPanelSell extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Nothing to sell.");
             return;
         }
-        
+
         SaleDAO sdao = new SaleDAO();
         int affectedRows = sdao.sellProducts(sr);
-        if(affectedRows==0){
+        if (affectedRows == 0) {
             System.out.println("Nothing inserted to db, something might gone wrong!");
         }
         model.setRowCount(0);
+        model.setRowCount(1);
     }//GEN-LAST:event_jButtonSellActionPerformed
 
     private List<SaleRecord> modelToRecord(DefaultTableModel model) {
         List<SaleRecord> sr = new ArrayList<>();
         for (int row = 0; row < model.getRowCount() - 1; row++) {
-            if (((int) model.getValueAt(row, 4)) <= 0) {
+            if (((double) model.getValueAt(row, Config.QUANTITY_COL)) <= 0) {
                 System.out.println("There is 0");
                 return null;
             }
 
-            sr.add(new SaleRecord(((Product) model.getValueAt(row, 0)).getId(),
-                    (int) model.getValueAt(row, 4),
-                    (double) model.getValueAt(row, 5)));
+            sr.add(new SaleRecord(((Product) model.getValueAt(row, Config.DATA_COL)).getId(),
+                    (double) model.getValueAt(row, Config.QUANTITY_COL),
+                    (double) model.getValueAt(row, Config.BUYP_COL),
+                    (double) model.getValueAt(row, Config.SELLP_COL),
+                    (double) model.getValueAt(row, Config.DISCOUNT_COL),
+                    Currency.getIntValue((String)model.getValueAt(row, Config.CURRENCY_COL))));
             //System.out.println(model.getDataVector().get(row));
 
         }

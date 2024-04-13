@@ -25,4 +25,8 @@ public abstract class Record {
     public void setDate(Timestamp date) {
         this.date = date;
     }
+    
+    public abstract Object[] toTableRow(int row);
+
+    public abstract Object[] getColumnNames();
 }

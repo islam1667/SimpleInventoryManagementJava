@@ -1,31 +1,30 @@
 package com.company.dataAccess.implementation;
 
-import com.company.bean.SaleRecord;
+import com.company.bean.ImportRecord;
+import com.company.dataAccess.inter.ImportDAOInter;
 import java.sql.Connection;
-import java.util.Arrays;
-import java.util.List;
-import com.company.dataAccess.inter.SaleDAOInter;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
  * @author islam
  */
-public class SaleDAO implements SaleDAOInter {
+public class ImportDAO implements ImportDAOInter {
 
-    private List<SaleRecord> resultSetToList(ResultSet rs) {
-        List<SaleRecord> sales = new ArrayList<>();
+    private List<ImportRecord> resultSetToList(ResultSet rs) {
+        List<ImportRecord> sales = new ArrayList<>();
         try {
             while (rs.next()) {
-                sales.add(new SaleRecord(
+                sales.add(new ImportRecord(
                         rs.getInt("product_id"),
                         rs.getDouble("quantity"),
                         rs.getDouble("buyprice"),
                         rs.getDouble("sellprice"),
-                        rs.getDouble("Discount"),
                         rs.getInt("currency")
                 ));
             }
@@ -35,16 +34,16 @@ public class SaleDAO implements SaleDAOInter {
         }
         return null;
     }
-
-    public int sellProducts(List<SaleRecord> sales) {
+    
+    public int importProducts(List<ImportRecord> sales) {
         ProductDAO pdao = new ProductDAO();
         try (Connection c = getConnection();) {
-            String query = "INSERT INTO `sales` (product_id, quantity, buyprice, sellprice, discount, currency) VALUES ";
-            for (SaleRecord sr : sales) {
-                if (pdao.sellProduct(sr.getProductId(), sr.getQuantity()) == 0) {
-                    throw new Exception("AffR=0 error Nothing sold, passed selling it, productId=" + sr.getProductId());
+            String query = "INSERT INTO `imports` (product_id, quantity, buyprice, sellprice, currency) VALUES ";
+            for (ImportRecord ir : sales) {
+                if (pdao.addProduct(ir.getProductId(), ir.getQuantity()) == 0) {
+                    throw new Exception("AffR=0 error Nothing sold, passed selling it, productId=" + ir.getProductId());
                 }
-                query = query.concat("(" + sr.getProductId() + "," + sr.getQuantity() + "," + sr.getBuyPrice() + "," + sr.getSellPrice() + "," + sr.getDiscount() + "," + sr.getCurrency() + "),");
+                query = query.concat("(" + ir.getProductId() + "," + ir.getQuantity() + "," + ir.getImportPrice() + "," + ir.getBuyPrice() + "," + ir.getCurrency() + "),");
             }
             query = query.substring(0, query.length() - 1).concat(";");
             System.out.println(query);
@@ -56,13 +55,13 @@ public class SaleDAO implements SaleDAOInter {
         return 0;
     }
 
-    public int sellProduct(SaleRecord sr) {
-        return sellProducts(Arrays.asList(sr));
+    public int importProduct(ImportRecord ir) {
+        return importProducts(Arrays.asList(ir));
     }
-
-    public List<SaleRecord> getSales(Date d1, Date d2) {
+    
+    public List<ImportRecord> getImports(Date d1, Date d2) {
         try (Connection c = getConnection();) {
-            PreparedStatement ps = c.prepareStatement("SELECT * FROM `sales` WHERE `record_date` BETWEEN ? AND ?");
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM `imports` WHERE `record_date` BETWEEN ? AND ?");
             ps.setDate(1, d1);
             ps.setDate(2, d2);
 

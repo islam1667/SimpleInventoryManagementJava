@@ -23,6 +23,7 @@ public class InventoryManagementJFrame extends javax.swing.JFrame {
         this.mainJPanel.add(Config.addFrame, "addFrame");
         this.mainJPanel.add(Config.browseFrame, "browseFrame");
         this.mainJPanel.add(Config.importFrame, "importFrame");
+        this.mainJPanel.add(Config.historyFrame, "historyFrame");
         this.revalidate();
         this.repaint();
     }

@@ -5,32 +5,30 @@ import com.company.inter.Record;
  *
  * @author islam
  */
-public class SaleRecord extends Record {
-    private int saleId;
+public class ImportRecord extends Record {
+    //recordId inside Record
     private int productId;
     private double quantity;
     private double buyPrice;
     private double sellPrice;
-    private double discount;
     private int currency;
 
-    public SaleRecord(int productId, double quantity, double buyPrice, double sellPrice, double discount, int currency) {
+    public ImportRecord(int productId, double quantity, double buyPrice, double sellPrice, int currency) {
         this.productId = productId;
         this.quantity = quantity;
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
-        this.discount = discount;
         this.currency = currency;
     }
 
-    public int getSaleId() {
-        return saleId;
+    public double getSellPrice() {
+        return sellPrice;
     }
 
-    public void setSaleId(int saleId) {
-        this.saleId = saleId;
+    public void setSellPrice(double sellPrice) {
+        this.sellPrice = sellPrice;
     }
-  
+    
     public int getProductId() {
         return productId;
     }
@@ -47,28 +45,20 @@ public class SaleRecord extends Record {
         this.quantity = quantity;
     }
 
-    public double getSellPrice() {
-        return sellPrice;
-    }
-
-    public void setSellPrice(double sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
-    public double getBuyPrice() {
+    public double getImportPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(double buyPrice) {
+    public void setImportPrice(double buyPrice) {
         this.buyPrice = buyPrice;
     }
 
-    public double getDiscount() {
-        return discount;
+    public double getBuyPrice() {
+        return sellPrice;
     }
 
-    public void setDiscount(double discount) {
-        this.discount = discount;
+    public void setBuyPrice(double sellPrice) {
+        this.sellPrice = sellPrice;
     }
 
     public int getCurrency() {
@@ -87,7 +77,6 @@ public class SaleRecord extends Record {
             this.quantity,
             this.buyPrice,
             this.sellPrice,
-            this.discount,
             this.currency
         };
     }
@@ -100,7 +89,6 @@ public class SaleRecord extends Record {
             "Quantity",
             "BuyPrice",
             "SellPrice",
-            "Discount",
             "Curenncy"
         };
     }

@@ -1,22 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.company.swingUI.JPanels;
 
 import com.company.bean.Product;
 import com.company.dataAccess.implementation.ProductDAO;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import com.company.swingUI.Config;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+
 
 /**
  *
@@ -126,17 +124,15 @@ public class JPanelBrowse extends javax.swing.JPanel {
                 .addComponent(searchJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(showAllJButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(43, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void configureTable() {
         DefaultTableModel model = new DefaultTableModel(
-                new String[]{
-                    "Data", "Part_Name", "Part_Number", "Part_Description", "Part_Quantity", "Part_Price", "Parts_Total_Price"
-                }, 0
+                Product.getTableColumnNames(), 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -145,13 +141,16 @@ public class JPanelBrowse extends javax.swing.JPanel {
 
         };
         jTable.setModel(model);
-
+        jTable.getColumnModel().getColumn(Config.DATA_COL).setMaxWidth(0);
+        jTable.getColumnModel().getColumn(Config.N_COL).setMaxWidth(50);
+        
+        
         jTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int row = jTable.rowAtPoint(e.getPoint());
-                    showProductEditDialog((Product)jTable.getValueAt(row, 0));
+                    showProductEditDialog((Product) jTable.getValueAt(row, Config.DATA_COL));
                 }
             }
         });
@@ -161,23 +160,42 @@ public class JPanelBrowse extends javax.swing.JPanel {
         JTextField pName = new JTextField(p.getName());
         JTextField pNumber = new JTextField(p.getProductNumber());
         JTextField pDesc = new JTextField(p.getDescription());
-        JSpinner pPrice = new JSpinner();
-        pPrice.setValue(p.getPrice());
-        
+        JTextField pCompany = new JTextField(p.getCompany());
+        JSpinner pBuyPrice = new JSpinner(new SpinnerNumberModel(0.0, 0.0, Integer.MAX_VALUE, 1.0));
+        pBuyPrice.setValue(p.getBuyPrice());
+        JSpinner pSellPrice = new JSpinner(new SpinnerNumberModel(0.0, 0.0, Integer.MAX_VALUE, 1.0));
+        pSellPrice.setValue(p.getSellPrice());
+
         final JComponent[] inputs = new JComponent[]{
             new JLabel("Part Name: "), pName,
             new JLabel("Part Number: "), pNumber,
             new JLabel("Part Description"), pDesc,
-            new JLabel("Part Price"), pPrice
-        };
+            new JLabel("Part Buy Price"), pBuyPrice,
+            new JLabel("Part Sell Price"), pSellPrice,
+            new JLabel("Part Company"), pCompany,};
+
+        int result = JOptionPane.showConfirmDialog(null, inputs, "My custom dialog", JOptionPane.OK_CANCEL_OPTION);
         
-        int result = JOptionPane.showConfirmDialog(null, inputs, "My custom dialog", JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            System.out.println("You entered "
-                    + pName.getText() + ", "
-                    + pNumber.getText() + ", "
-                    + pDesc.getText() + ", "
-                    + pPrice.getValue());
+            Product edited = new Product(p);
+            edited.setName(pName.getText());
+            edited.setProductNumber(pNumber.getText());
+            edited.setDescription(pDesc.getText());
+            edited.setBuyPrice((double)pBuyPrice.getValue());
+            edited.setSellprice((double)pSellPrice.getValue());
+            edited.setCompany(pCompany.getText());
+            int success = new ProductDAO().updateProduct(p.getId(), edited);
+            if(success == 0){
+                JOptionPane.showMessageDialog(this, "There is no record within dates.");
+            }
+            System.out.println("You entered: "
+                    + pName.getText() + "|"
+                    + pNumber.getText() + "|"
+                    + pDesc.getText() + "|"
+                    + pBuyPrice.getValue() + "|"
+                    + pSellPrice.getValue() + "|"
+                    + pCompany.getText());
+            this.showAll();
         } else {
             System.out.println("User canceled / closed the dialog, result = " + result);
         }
@@ -192,26 +210,35 @@ public class JPanelBrowse extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         model.setRowCount(0);
 
+        int row=0;
         for (Product p : products) {
-            model.addRow(p.toTableRow(-1));
+            model.addRow(p.toTableRow(row));
+            row++;
         }
         jTable.setModel(model);
+        jTable.getColumnModel().getColumn(Config.DATA_COL).setPreferredWidth(0);
+        jTable.getColumnModel().getColumn(Config.N_COL).setPreferredWidth(40);
     }//GEN-LAST:event_searchJButtonActionPerformed
 
     private void showAllJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAllJButtonActionPerformed
+        showAll();
+    }//GEN-LAST:event_showAllJButtonActionPerformed
+
+    private void showAll(){
         ProductDAO dao = new ProductDAO();
         List<Product> products = dao.getAllProduct();
 
         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
         model.setRowCount(0);
 
+        int row=0;
         for (Product p : products) {
-            model.addRow(p.toTableRow(-1));
+            model.addRow(p.toTableRow(row));
+            row++;
         }
 
         jTable.setModel(model);
-    }//GEN-LAST:event_showAllJButtonActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

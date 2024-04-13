@@ -1,13 +1,13 @@
 package com.company.swingUI.JPanels;
 
+import com.company.bean.ImportRecord;
 import com.company.bean.Product;
+import com.company.dataAccess.implementation.ImportDAO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import de.siegmar.fastcsv.reader.CsvReader;
-import de.siegmar.fastcsv.writer.CsvWriter;
-import java.io.Writer;
+import com.company.swingUI.Config;
 
 /**
  *
@@ -20,50 +20,67 @@ public class JPanelImport extends javax.swing.JPanel {
      */
     public JPanelImport() {
         initComponents();
-        testData();
         configureTable();
     }
 
+    private static final int TOTAL_COL = 11;
+    private static final int QUANTITY_COL = 5;
+    private static final int SELLP_COL = 8;
+    private static final int BUYP_COL = 7;
+    
     private void configureTable() {
+        DefaultTableModel model = new DefaultTableModel(
+                new String[]{
+                    "Data", //0
+                    "№", //1
+                    "Name", //2
+                    "Number", //3
+                    "Description", //4
+                    "Quantity", //5
+                    "Measure", //6
+                    "Buy Price", //7
+                    "Sell Price", //8
+                    // "Discount", //
+                    "Currency", //9
+                    "Company", //10
+                    "Total Price Value" //11
+                }, 1);
+
+        jTableImport.setModel(model);
         jTableImport.setRowHeight(25);
-        jTableImport.getColumnModel().getColumn(1).setCellEditor(new ProductCellEditor(new EventCellInputChange() {
+        jTableImport.getColumnModel().getColumn(Config.DATA_COL).setMaxWidth(0);
+        jTableImport.getColumnModel().getColumn(Config.N_COL).setMaxWidth(50);
+        
+        //filter combo box cell editor
+        jTableImport.getColumnModel().getColumn(Config.NAME_COL).setCellEditor(new ProductCellEditor(new EventCellInputChange() {
             @Override
-            public void inputChanged() {
+            public void inputChanged(Product item, int row) {
+                jTableImport.getModel().setValueAt((item.getQuantity() == 0) ? 0.0 : item.getSellPrice(), row, TOTAL_COL);
                 DefaultTableModel model = (DefaultTableModel) jTableImport.getModel();
-                if (model.getValueAt(model.getRowCount() - 1, 0) != null) {
+                if (model.getValueAt(model.getRowCount() - 1, Config.DATA_COL) != null) {
                     model.addRow(new Object[model.getColumnCount()]);
                 }
                 sumAndShow();
                 System.out.println("Input Change Fired");
             }
-        }));
-    }
+        }, true));
 
-    private void testData() {
-        jTableImport.getColumnModel().getColumn(4).setCellEditor(new QtyCellEditor(new EventCellInputChange() {
+        //Quantity cell editor
+        jTableImport.getColumnModel().getColumn(QUANTITY_COL).setCellEditor(new QtyCellEditor(new EventCellInputChange() {
             @Override
-            public void inputChanged() {
-//                sumAndShow();
+            public void inputChanged(Product p, int row) {
+                sumAndShow();
             }
-        }));
-
-        
-        
-        
-//        DefaultTableModel model = (DefaultTableModel) jTableSell.getModel();
-//        model.addRow(new Product("Coca", "cda", 2.0, -1, "A1", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cofasca", "csa", 3.0, -1, "A2", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cocfaa", "cvf", 4.0, -1, "A3", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cofaca", "ccd", 5.0, -1, "A4", 2).toTableRow(jTableSell.getRowCount() + 1));
-//        model.addRow(new Product("Cocfasa", "cas", 6.0, -1, "A5", 2).toTableRow(jTableSell.getRowCount() + 1));
+        }, true));
     }
+
 
     public double sumAndShow() {
         double sum = 0;
-        for (int row = 0; row < jTableImport.getRowCount()-1; row++) {
-            sum += (double) jTableImport.getValueAt(row, 6);
+        for (int row = 0; row < jTableImport.getRowCount() - 1; row++) {
+            sum += (double) jTableImport.getValueAt(row, BUYP_COL);
         }
-        totalJLabel.setText("Total: "+ String.format("%.2f", sum));
+        totalJLabel.setText("Total: " + String.format("%.2f", sum));
         return sum;
     }
 
@@ -136,10 +153,10 @@ public class JPanelImport extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(totalJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -147,9 +164,9 @@ public class JPanelImport extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(totalJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -158,22 +175,42 @@ public class JPanelImport extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jTableImport.clearSelection();
         DefaultTableModel model = (DefaultTableModel) jTableImport.getModel();
-        
-        List<Product> products = new ArrayList<>();
-//        System.out.println(evt.getWhen());
-        for (int row = 0; row < model.getRowCount()-1; row++) {
-            products.add((Product)model.getValueAt(row, 0));
-            System.out.println(model.getDataVector().get(row));
-            if(((int)model.getValueAt(row, 4))==0){
-                JOptionPane.showMessageDialog(this, "Quantity cant be 0.");
-                System.out.println("There is 0");
-            }
+        List<ImportRecord> ir = this.modelToRecord(model);
+        if (ir == null) {
+            JOptionPane.showMessageDialog(this, "Quantity cant be 0.");
+            return;
+        } else if (ir.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nothing to sell.");
+            return;
         }
-        
-//        for(Product p : products){
-//            System.out.println(p.toString());
-//        }
+
+        ImportDAO idao = new ImportDAO();
+        int affectedRows = idao.importProducts(ir);
+        if (affectedRows == 0) {
+            System.out.println("Nothing inserted to db, something might gone wrong!");
+        }
+        model.setRowCount(0);
+        model.setRowCount(1);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private List<ImportRecord> modelToRecord(DefaultTableModel model) {
+        List<ImportRecord> ir = new ArrayList<>();
+        for (int row = 0; row < model.getRowCount() - 1; row++) {
+            if (((double) model.getValueAt(row, QUANTITY_COL)) <= 0) {
+                System.out.println("There is 0");
+                return null;
+            }
+
+            ir.add(new ImportRecord(((Product) model.getValueAt(row, Config.DATA_COL)).getId(),
+                    (double) model.getValueAt(row, QUANTITY_COL),
+                    (double) model.getValueAt(row, BUYP_COL),
+                    (double) model.getValueAt(row, SELLP_COL),
+                    1));
+            //System.out.println(model.getDataVector().get(row));
+
+        }
+        return ir;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

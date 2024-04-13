@@ -1,7 +1,17 @@
 package com.company.swingUI.JPanels;
 
+import com.company.dataAccess.implementation.ImportDAO;
+import com.company.dataAccess.implementation.SaleDAO;
 import com.company.swingUI.Config;
 import com.company.swingUI.InventoryManagementJFrame;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.sql.Date;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Calendar;
 
 /**
  *
@@ -12,7 +22,6 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
     /**
      * Creates new form TopButtonBarJPanel
      */
-    
     public TopButtonBarJPanel() {
         initComponents();
     }
@@ -28,9 +37,11 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         sellJButton = new javax.swing.JButton();
-        importJButton = new javax.swing.JButton();
+        saleHistoyJButton = new javax.swing.JButton();
         addJButton = new javax.swing.JButton();
         browseJButton = new javax.swing.JButton();
+        importHistoryJButton = new javax.swing.JButton();
+        importJButton = new javax.swing.JButton();
 
         sellJButton.setText("Sell");
         sellJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -39,10 +50,10 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
             }
         });
 
-        importJButton.setText("Import");
-        importJButton.addActionListener(new java.awt.event.ActionListener() {
+        saleHistoyJButton.setText("Sales History");
+        saleHistoyJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importJButtonActionPerformed(evt);
+                saleHistoyJButtonActionPerformed(evt);
             }
         });
 
@@ -60,6 +71,20 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
             }
         });
 
+        importHistoryJButton.setText("Import History");
+        importHistoryJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importHistoryJButtonActionPerformed(evt);
+            }
+        });
+
+        importJButton.setText("Import");
+        importJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -73,17 +98,23 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
                 .addComponent(browseJButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importJButton)
-                .addContainerGap(343, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addComponent(saleHistoyJButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(importHistoryJButton)
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(importJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(saleHistoyJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addComponent(sellJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addComponent(addJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addComponent(browseJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                    .addComponent(browseJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(importHistoryJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(importJButton, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -93,7 +124,7 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 50, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,30 +134,75 @@ public class TopButtonBarJPanel extends javax.swing.JPanel {
 
     private void addJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJButtonActionPerformed
         System.out.println("Add Button Clicked");
-        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "addFrame");
+        Config.layout.show(((InventoryManagementJFrame) this.getTopLevelAncestor()).getMainJPanel(), "addFrame");
     }//GEN-LAST:event_addJButtonActionPerformed
 
-    private void importJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importJButtonActionPerformed
-        System.out.println("Import Button Clicked");
-        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "importFrame");
-    }//GEN-LAST:event_importJButtonActionPerformed
+    private void saleHistoyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saleHistoyJButtonActionPerformed
+        this.showFilterDialog(1);
+    }//GEN-LAST:event_saleHistoyJButtonActionPerformed
 
     private void sellJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sellJButtonActionPerformed
         System.out.println("Sell Button Clicked");
-        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "sellFrame");
+        Config.layout.show(((InventoryManagementJFrame) this.getTopLevelAncestor()).getMainJPanel(), "sellFrame");
     }//GEN-LAST:event_sellJButtonActionPerformed
 
     private void browseJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseJButtonActionPerformed
         System.out.println("Browse Button Clicked");
-        Config.layout.show(((InventoryManagementJFrame)this.getTopLevelAncestor()).getMainJPanel(), "browseFrame");
+        Config.layout.show(((InventoryManagementJFrame) this.getTopLevelAncestor()).getMainJPanel(), "browseFrame");
     }//GEN-LAST:event_browseJButtonActionPerformed
+
+    private void importHistoryJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importHistoryJButtonActionPerformed
+        this.showFilterDialog(2);
+    }//GEN-LAST:event_importHistoryJButtonActionPerformed
+
+    private void importJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importJButtonActionPerformed
+        System.out.println("Import Button Clicked");
+        Config.layout.show(((InventoryManagementJFrame) this.getTopLevelAncestor()).getMainJPanel(), "importFrame");
+    }//GEN-LAST:event_importJButtonActionPerformed
+
+    private void showFilterDialog(int w) {
+        
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        
+        JDateChooser date1 = new JDateChooser();
+        date1.setDate(today.getTime());
+        JDateChooser date2 = new JDateChooser();
+        today.add(Calendar.DATE, 1);
+        date2.setDate(today.getTime());
+
+        final JComponent[] inputs = new JComponent[]{
+            new JLabel("From: "), date1,
+            new JLabel("To: "), date2
+        };
+
+        int result = JOptionPane.showConfirmDialog(null, inputs, "My custom dialog", JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            System.out.println("You entered: " + date1.getDate() + "|" + date2.getDate());
+            //Show history table
+            System.out.println("Import Button Clicked");
+            Config.layout.show(((InventoryManagementJFrame) this.getTopLevelAncestor()).getMainJPanel(), "historyFrame");
+            //Show table with sales
+            if(w==1){
+                ((JPanelHistory)Config.historyFrame).showHistory(new SaleDAO().getSales(new Date(date1.getDate().getTime()), new Date(date2.getDate().getTime())));
+            }else if(w==2){
+                ((JPanelHistory)Config.historyFrame).showHistory(new ImportDAO().getImports(new Date(date1.getDate().getTime()), new Date(date2.getDate().getTime())));
+            }
+        } else {
+            System.out.println("User canceled / closed the dialog, result = " + result);
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
     private javax.swing.JButton browseJButton;
+    private javax.swing.JButton importHistoryJButton;
     private javax.swing.JButton importJButton;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton saleHistoyJButton;
     private javax.swing.JButton sellJButton;
     // End of variables declaration//GEN-END:variables
 }

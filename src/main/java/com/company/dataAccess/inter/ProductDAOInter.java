@@ -10,9 +10,9 @@ import java.util.List;
 public interface ProductDAOInter extends MainDAOInter{
     public int insertProduct(Product p);
     
-    public int addProduct(int id, int amount);
+    public int addProduct(int id, double amount);
     
-    public int sellProduct(int id, int amount);
+    public int sellProduct(int id, double amount);
     
     public int updateProduct(int id, Product p);
     

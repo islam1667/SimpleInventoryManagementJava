@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
+import com.company.swingUI.Config;
 
 /**
  *
@@ -17,10 +18,12 @@ public class ProductCellEditor extends DefaultCellEditor {
 
     private FilterComboBox comboBox;
     private EventCellInputChange event;
+    private boolean isImport;
 
-    public ProductCellEditor(EventCellInputChange e) {
+    public ProductCellEditor(EventCellInputChange e, boolean isImport) {
         super(new FilterComboBox());
         comboBox = new FilterComboBox();
+        this.isImport = isImport;
         event = e;
     }
 
@@ -37,6 +40,16 @@ public class ProductCellEditor extends DefaultCellEditor {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     fireEditingStopped();
+                    for (int i = 0; i < table.getRowCount() - 1; i++) {
+                        if (((Product) comboBox.getSelectedItem()).equals((Product) table.getValueAt(i, Config.DATA_COL))) {
+                            System.out.println("return called");
+                            return;
+                        }
+                    }
+                    if (comboBox.getSelectedIndex()!= -1 && ((Product) comboBox.getSelectedItem()).getQuantity() <= 0 && !isImport) {
+                        System.out.println("Quantity <= 0");
+                        return ;
+                    }
                     if (comboBox.getSelectedIndex() != -1) {
                         itemChanged(table, value, isSelected, row, column);
                     }
@@ -62,14 +75,22 @@ public class ProductCellEditor extends DefaultCellEditor {
     private void itemChanged(JTable table, Object value, boolean isSelected, int row, int column) {
         Product item = (Product) this.comboBox.getSelectedItem();
 //        System.out.println("ItemChanged called");
-        table.getModel().setValueAt(item, row, 0);
-        table.getModel().setValueAt(item.getProductNumber(), row, 2);
-        table.getModel().setValueAt(item.getDescription(), row, 3);
-        table.getModel().setValueAt(1, row, 4);
-        table.getModel().setValueAt(item.getPrice(), row, 5);
-        table.getModel().setValueAt((item.getQuantity()==0) ? 0 : item.getPrice(), row, 6);
+        var model =  table.getModel();
         
-        event.inputChanged();
+        model.setValueAt(item, row, Config.DATA_COL);
+        model.setValueAt(row+1, row, Config.N_COL);
+        model.setValueAt(item.getProductNumber(), row, Config.NUMBER_COL);
+        model.setValueAt(item.getDescription(), row, Config.DESC_COL);
+        model.setValueAt(1.0, row, Config.QUANTITY_COL);
+        model.setValueAt(item.getMeasure(), row, Config.MEASURE_COL);
+        model.setValueAt(item.getBuyPrice(), row, Config.BUYP_COL);
+        model.setValueAt(item.getSellPrice(), row, Config.SELLP_COL);
+        model.setValueAt(0.0, row, Config.DISCOUNT_COL);
+        model.setValueAt("AZN", row, Config.CURRENCY_COL);
+        model.setValueAt(item.getCompany(), row, Config.COMPANY_COL);
+        
+        // total price change inside input changed method
+        event.inputChanged(item, row);
     }
 
 }

@@ -45,7 +45,7 @@ public class FilterComboBox extends JComboBox {
                             comboBox.setPopupVisible(true);
                         } catch (Exception e) {}
                     }
-                }, 500, TimeUnit.MILLISECONDS);  
+                }, 100, TimeUnit.MILLISECONDS);  
             }
 
             @Override

@@ -10,5 +10,5 @@ public interface ProductInter {
     
     String getDescription();
     
-    double getPrice();
+    double getSellPrice();
 }
